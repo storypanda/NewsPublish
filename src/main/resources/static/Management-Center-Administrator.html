@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员管理</title>
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <link rel="stylesheet" href="element-ui/theme-chalk/index.css">
+    <script src="element-ui/index.js"></script>
+    <link rel="stylesheet" href="css/management.css">
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header height="100px">
+            <h2 style="margin: 0">看客新闻</h2>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-submenu index="1">
+                    <template slot="title">新闻管理</template>
+                    <el-menu-item index="1-1"><a href="Management-Center-News.html" target="_blank">发布新闻</a>
+                    </el-menu-item>
+                    <el-menu-item index="1-2"><a href="Management-Center-NewsList.html" target="_blank">新闻列表</a>
+                    </el-menu-item>
+                </el-submenu>
+                <el-menu-item index="2"><a href="Management-Center-Category.html" target="_blank">新闻类别管理</a>
+                </el-menu-item>
+                <el-menu-item index="3"><a href="Management-Center-Comment.html" target="_blank">评论管理</a></el-menu-item>
+                <el-menu-item index="4"><a href="Management-Center-Administrator.html" target="_blank">管理员管理</a>
+                </el-menu-item>
+            </el-menu>
+            <div class="line"></div>
+        </el-header>
+        <el-main>Main</el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            activeIndex: '4'
+        },
+        methods:{
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            }
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>国际新闻</title>
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <link rel="stylesheet" href="element-ui/theme-chalk/index.css">
+    <script src="element-ui/index.js"></script>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/comment.css">
+    <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-aside width="500px"></el-aside>
+        <el-container>
+            <el-header height="100px">
+                <h2 style="margin: 0">看客新闻</h2>
+                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                    <el-menu-item index="1"><a href="home.html">首页</a></el-menu-item>
+                    <el-menu-item index="2"><a href="domestic.html">国内</a></el-menu-item>
+                    <el-menu-item index="3"><a href="world.html">国际</a></el-menu-item>
+                    <el-menu-item index="4"><a href="war.html">军事</a></el-menu-item>
+                    <el-menu-item index="5"><a href="air.html">航空</a></el-menu-item>
+                    <el-menu-item index="6"><a href="gov.html">政务</a></el-menu-item>
+                </el-menu>
+                <div class="line"></div>
+            </el-header>
+            <el-main>
+                <ul>
+                    <li v-for="(item, index) in items" :key="item.id">
+                        <el-button @click="openDrawer(index)" style="margin-left: 8px;">{{ item.title }}</el-button>
+                    </li>
+                </ul>
+
+                <el-drawer
+                        v-bind:title="drawerItems.title"
+                        :visible.sync="drawer"
+                        :direction="direction"
+                        :before-close="handleClose"
+                        size="100%">
+                    <span style="display: block;text-align: center">{{drawerItems.content}}</span>
+                    <div style="text-align: center"><img v-bind:src="drawerItems.picturePath" height="400px"></div>
+                    <div>
+                        <div v-clickoutside="hideReplyBtn" @click="inputFocus" class="my-reply">
+                            <el-avatar class="header-img" :size="40" :src="myHeader"></el-avatar>
+                            <div class="reply-info" >
+                                <div
+                                        tabindex="0"
+                                        contenteditable="true"
+                                        id="replyInput"
+                                        spellcheck="false"
+                                        placeholder="输入评论..."
+                                        class="reply-input"
+                                        @focus="showReplyBtn"
+                                        @input="onDivInput($event)"
+                                >
+                                </div>
+                            </div>
+                            <div class="reply-btn-box" v-show="btnShow">
+                                <el-button class="reply-btn" size="medium" @click="sendComment" type="primary">发表评论</el-button>
+                            </div>
+                        </div>
+                        <div v-for="(item,i) in comments" :key="i" class="author-title reply-father">
+                            <el-avatar class="header-img" :size="40" :src="myHeader"></el-avatar>
+                            <div class="author-info">
+                                <span class="author-name">{{item.name}}</span>
+                                <span class="author-time">{{item.time}}</span>
+                            </div>
+                            <div class="talk-box">
+                                <p>
+                                    <span class="reply">{{item.comment}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </el-drawer>
+
+            </el-main>
+        </el-container>
+        <el-aside width="500px"></el-aside>
+    </el-container>
+</div>
+</body>
+<script>
+    const clickoutside = {
+        // 初始化指令
+        bind(el, binding, vnode) {
+            function documentHandler(e) {
+                // 这里判断点击的元素是否是本身，是本身，则返回
+                if (el.contains(e.target)) {
+                    return false;
+                }
+                // 判断指令中是否绑定了函数
+                if (binding.expression) {
+                    // 如果绑定了函数 则调用那个函数，此处binding.value就是handleClose方法
+                    binding.value(e);
+                }
+            }
+            // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
+            el.vueClickOutside = documentHandler;
+            document.addEventListener('click', documentHandler);
+        },
+        update() {},
+        unbind(el, binding) {
+            // 解除事件监听
+            document.removeEventListener('click', el.vueClickOutside);
+            delete el.vueClickOutside;
+        },
+    };
+
+    var app = new Vue({
+        el: '#app',
+        name:'ArticleComment',
+        data: {
+            activeIndex: '3',
+            btnShow: false,
+            index:'0',
+            replyComment:'',
+            myName:'',
+            myHeader:'img/user-image.gif',
+            myId:19870621,
+            to:'',
+            toId:-1,
+            comments:[],
+            items: [],
+            drawerItems: [],
+            drawer: false,
+            direction: 'rtl',
+        },
+        mounted: function () {
+            this.getNews();
+        },
+        directives: {clickoutside},
+        methods:{
+            getName(){
+                this.myName=returnCitySN["cname"]+'网友'
+            },
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            inputFocus(){
+                var replyInput = document.getElementById('replyInput');
+                replyInput.style.padding= "8px 8px"
+                replyInput.style.border ="2px solid blue"
+                replyInput.focus()
+            },
+            showReplyBtn(){
+                this.btnShow = true
+            },
+            hideReplyBtn(){
+                this.btnShow = false
+                replyInput.style.padding= "10px"
+                replyInput.style.border ="none"
+            },
+            showReplyInput(i,name,id){
+                this.comments[this.index].inputShow = false
+                this.index =i
+                this.comments[i].inputShow = true
+                this.to = name
+                this.toId = id
+            },
+            _inputShow(i){
+                return this.comments[i].inputShow
+            },
+            sendComment(){
+                if(!this.replyComment){
+                    this.$message({
+                        showClose: true,
+                        type:'warning',
+                        message:'评论不能为空'
+                    })
+                }else{
+                    let a ={}
+                    let input =  document.getElementById('replyInput')
+                    let timeNow = new Date().getTime();
+                    a.name= this.myName
+                    a.ip=this.ready()
+                    a.comment =this.replyComment
+                    a.time = timeNow
+                    a.newsId = this.drawerItems.id
+                    console.log(a)
+                    axios.post('/comments', a)
+                    this.replyComment = ''
+                    input.innerHTML = '';
+                    this.getComment();
+                }
+            },
+            onDivInput: function(e) {
+                this.replyComment = e.target.innerHTML;
+            },
+            ready(){
+                return returnCitySN["cip"]
+            },
+            getComment() {
+                axios.get('/comments', {
+                    params: { // 请求参数拼接在url上
+                        newsId: this.drawerItems.id
+                    }})
+                    .then((response) => {
+                        this.comments = response.data
+                        for(var i=0;i<this.comments.length;i++){
+                            this.comments[i].time=new Date(this.comments[i].time)
+                        }
+                        console.log(response)
+                    })
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+            openDrawer(index){
+                this.drawer = true
+                this.drawerItems=this.items[index]
+                this.getComment();
+            },
+            getNews() {
+                axios.get('/news',{
+                    params: { // 请求参数拼接在url上
+                        categoryId: this.activeIndex-1
+                    }})
+                    .then((response) => {
+                        this.items = response.data
+                        console.log(response)
+                    })
+            },
+        }
+    })
+</script>
+</html>

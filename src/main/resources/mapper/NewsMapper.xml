@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.NewsPublish.dao.NewsMapper" >
+    <resultMap id="BaseResultMap" type="com.NewsPublish.entity.News" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="newsTitle" property="title" jdbcType="VARCHAR" />
+        <result column="newsAuthor" property="author" jdbcType="VARCHAR" />
+        <result column="newsPublishTime" property="publishTime" jdbcType="TIMESTAMP"/>
+        <result column="newsContent" property="content" jdbcType="VARCHAR" />
+        <result column="newsPicturePath" property="picturePath" jdbcType="VARCHAR" />
+        <result column="newsIsTopLine" property="isTopLine" jdbcType="SMALLINT" />
+        <result column="newsIsHot" property="isHot" jdbcType="SMALLINT" />
+        <result column="newsHitCount" property="hitCount" jdbcType="INTEGER" />
+        <result column="newsCategoryId" property="categoryId" jdbcType="SMALLINT" />
+        <result column="newsCommentCount" property="commentCount" jdbcType="INTEGER" />
+    </resultMap>
+
+
+
+    <insert id="publish" parameterType="com.NewsPublish.entity.News" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_news(id, newsTitle, newsAuthor, newsPublishTime, newsContent, newsPicturePath, newsIsTopLine, newsIsHot, newsCategoryId) values( #{id}, #{title}, #{author}, #{publishTime}, #{content}, #{picturePath}, #{isTopLine}, #{isHot}, #{categoryId} )
+    </insert >
+    <select id="list" parameterType="com.NewsPublish.entity.News" resultMap="BaseResultMap">
+        select * from t_news
+    </select>
+    <select id="listByCategoryId" parameterType="com.NewsPublish.entity.News" resultMap="BaseResultMap">
+        select * from t_news where newsCategoryId=#{categoryId}
+    </select>
+    <update id="edit" parameterType="com.NewsPublish.entity.News">
+        update t_news set newsTitle=#{title}, newsAuthor=#{author}, newsPublishTime=#{publishTime}, newsContent=#{content}, newsPicturePath=#{picturePath}, newsIsTopLine=#{isTopLine}, newsIsHot=#{isHot}, newsCategoryId=#{categoryId} where id=#{id}
+    </update>
+    <delete id="delete" parameterType="com.NewsPublish.entity.News">
+        delete from t_news where id=#{id}
+    </delete>
+    <update id="updateHitCount" parameterType="com.NewsPublish.entity.News">
+        update t_news set newsHitCount=#{hitCount} where id=#{id}
+    </update>
+</mapper>

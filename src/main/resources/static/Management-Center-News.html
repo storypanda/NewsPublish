@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新闻管理</title>
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <link rel="stylesheet" href="element-ui/theme-chalk/index.css">
+    <script src="element-ui/index.js"></script>
+    <link rel="stylesheet" href="css/management.css">
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header height="100px">
+            <h2 style="margin: 0">看客新闻</h2>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-submenu index="1">
+                    <template slot="title">新闻管理</template>
+                    <el-menu-item index="1-1"><a href="Management-Center-News.html" target="_blank">发布新闻</a></el-menu-item>
+                    <el-menu-item index="1-2"><a href="Management-Center-NewsList.html" target="_blank">新闻列表</a></el-menu-item>
+                </el-submenu>
+                <el-menu-item index="2"><a href="Management-Center-Category.html" target="_blank">新闻类别管理</a></el-menu-item>
+                <el-menu-item index="3"><a href="Management-Center-Comment.html" target="_blank">评论管理</a></el-menu-item>
+                <el-menu-item index="4"><a href="Management-Center-Administrator.html" target="_blank">管理员管理</a></el-menu-item>
+            </el-menu>
+            <div class="line"></div>
+        </el-header>
+        <el-main>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="新闻标题" prop="title">
+                    <el-input v-model="ruleForm.title"></el-input>
+                </el-form-item>
+                <el-form-item label="新闻作者" prop="author">
+                    <el-input v-model="ruleForm.author"></el-input>
+                </el-form-item>
+                <el-form-item label="新闻内容" prop="content">
+                    <el-input type="textarea" v-model="ruleForm.content"></el-input>
+                </el-form-item>
+                <el-form-item label="图片路径" prop="picturePath">
+                    <el-input v-model="ruleForm.picturePath"></el-input>
+                </el-form-item>
+                <el-form-item label="轮播新闻" prop="isTopLine">
+                    <el-select v-model="ruleForm.isTopLine" placeholder="请选择是否轮播新闻">
+                        <el-option label="是" value="1"></el-option>
+                        <el-option label="否" value="0"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="热点新闻" prop="isHot">
+                    <el-select v-model="ruleForm.isHot" placeholder="请选择是否热点新闻">
+                        <el-option label="是" value="1"></el-option>
+                        <el-option label="否" value="0"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="新闻类别" prop="categoryId">
+                    <el-select v-model="ruleForm.categoryId" placeholder="请选择新闻类别">
+                        <el-option label="国内" value="1"></el-option>
+                        <el-option label="国际" value="2"></el-option>
+                        <el-option label="军事" value="3"></el-option>
+                        <el-option label="航空" value="4"></el-option>
+                        <el-option label="政务" value="5"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            activeIndex: '1',
+            ruleForm: {
+                title: '',
+                author: '',
+                content: '',
+                picturePath: '',
+                isTopLine: '',
+                isHot: '',
+                categoryId: '',
+            },
+            rules: {
+                title: [
+                    {required: true, message: '请输入新闻标题', trigger: 'blur'},
+                    {min: 1, max: 30, message: '长度在 1 到 30 个字符', trigger: 'blur'}
+                ],
+                author: [
+                    {required: true, message: '请输入新闻作者', trigger: 'blur'},
+                    {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
+                ],
+                content: [
+                    {required: true, message: '请填写新闻内容', trigger: 'blur'}
+                ],
+                picturePath: [
+                    {required: true, message: '请填写图片路径', trigger: 'blur'}
+                ],
+                isTopLine: [
+                    {required: true, message: '请选择是否轮播新闻', trigger: 'change'}
+                ],
+                isHot: [
+                    {required: true, message: '请选择是否轮播新闻', trigger: 'change'}
+                ],
+                categoryId: [
+                    {required: true, message: '请选择新闻类别', trigger: 'change'}
+                ]
+            }
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios.post('/news', this.ruleForm)
+                        alert('submit!');
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            }
+        }
+    })
+</script>
+</html>

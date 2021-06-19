@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/axios.js"></script>
+    <link rel="stylesheet" href="element-ui/theme-chalk/index.css">
+    <script src="element-ui/index.js"></script>
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+    <div id="app">
+        <el-container>
+            <el-aside width="500px"></el-aside>
+            <el-container>
+                <el-header height="100px">
+                    <h2 style="margin: 0">看客新闻</h2>
+                    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                        <el-menu-item index="1"><a href="home.html">首页</a></el-menu-item>
+                        <el-menu-item index="2"><a href="domestic.html">国内</a></el-menu-item>
+                        <el-menu-item index="3"><a href="world.html">国际</a></el-menu-item>
+                        <el-menu-item index="4"><a href="war.html">军事</a></el-menu-item>
+                        <el-menu-item index="5"><a href="air.html">航空</a></el-menu-item>
+                        <el-menu-item index="6"><a href="gov.html">政务</a></el-menu-item>
+                    </el-menu>
+                    <div class="line"></div>
+                </el-header>
+                <el-main>
+                    <div class="block">
+                        <el-carousel trigger="click" height="400px">
+                            <el-carousel-item v-for="key in item" >
+                                <h3 class="small"><img :src="key.img" height="400px"/></h3>
+                            </el-carousel-item>
+                        </el-carousel>
+                    </div>
+                </el-main>
+            </el-container>
+            <el-aside width="500px"></el-aside>
+        </el-container>
+    </div>
+</body>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                item : [{id:1,img:'img/NASA将128只小鱿鱼送往国际空间站.jpg'},
+                        {id:2,img:'img/山西铁矿透水事故救援现场.jpg'},
+                        {id:3,img:'img/核污染废弃物管理不善 东电将加紧展开检查.jpg'},
+                        {id:4,img:'img/水下摄影师拍三亚：海底世界惊艳曝光.jpg'}],
+                activeIndex: '1'
+            },
+            methods:{
+                handleSelect(key, keyPath) {
+                    console.log(key, keyPath);
+                }
+            }
+        })
+    </script>
+</html>

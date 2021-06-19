@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.NewsPublish.dao.CommentsMapper" >
+    <resultMap id="CommentsResultMap" type="com.NewsPublish.entity.Comments" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="commentName" property="name" jdbcType="VARCHAR" />
+        <result column="commentIP" property="ip" jdbcType="VARCHAR" />
+        <result column="commentContent" property="comment" jdbcType="VARCHAR" />
+        <result column="commentPublishTime" property="time" jdbcType="TIMESTAMP" />
+        <result column="commentNewsId" property="newsId" jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="list" parameterType="com.NewsPublish.entity.Comments" resultMap="CommentsResultMap">
+        select * from t_comment
+    </select>
+
+    <select id="listById" parameterType="com.NewsPublish.entity.Comments" resultMap="CommentsResultMap">
+        select * from t_comment where commentNewsId=#{newsId}
+    </select>
+
+    <insert id="publish" parameterType="com.NewsPublish.entity.Comments" useGeneratedKeys="true" keyProperty="id" >
+        insert into t_comment(id, commentName, commentIP, commentContent, commentPublishTime, commentNewsId) values( #{id}, #{name}, #{ip}, #{comment}, #{time}, #{newsId})
+    </insert >
+
+    <delete id="remove" parameterType="com.NewsPublish.entity.Comments">
+        delete from t_comment where id=#{id}
+    </delete>
+</mapper>
