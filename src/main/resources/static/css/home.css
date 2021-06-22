@@ -1,5 +1,6 @@
 body {
     overflow: auto;
+    background-color: #EFEFEF;
 }
 
 #app {
@@ -7,10 +8,9 @@ body {
 }
 
 .el-header {
-    background-color: #B3C0D1;
+    z-index:101;
     color: #333;
     text-align: center;
-
 }
 
 .el-aside {
@@ -19,9 +19,8 @@ body {
 }
 
 .el-main {
-    background-color: #F2F1D7;
+    background-color: #EFEFEF;
     padding: 0;
-    height: 1000px;
 }
 
 body > .el-container {
@@ -55,3 +54,7 @@ body > .el-container {
 .el-drawer {
     background-color: #F2F1D7;
 }
+
+li {list-style-type:none;}
+
+ul {list-style-type:none;}

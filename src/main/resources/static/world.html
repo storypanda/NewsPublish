@@ -32,7 +32,17 @@
             <el-main>
                 <ul>
                     <li v-for="(item, index) in items" :key="item.id">
-                        <el-button @click="openDrawer(index)" style="margin-left: 8px;">{{ item.title }}</el-button>
+                        <div style="height: 200px;width: 1000px">
+                            <div style="height: 160px;width:700px;background-color: #FFFFFF;position:absolute;z-index:101;text-align: center;margin-right: 150px;margin-left: 150px">
+                                <h1 style="color: #444;font-size: 21px;font-weight: 700;padding: 0;line-height: 1.5;margin: 20px 20px 0;">
+                                    {{ item.title }}
+                                </h1>
+                                <div style="margin-top: 5px;font-size: 12px;text-align: center;">
+                                    <i class="el-icon-date"></i>发表于<span>{{item.publishTime}}</span>
+                                </div>
+                                <el-button type="primary" @click="openDrawer(index)" style="margin-top: 25px;">阅读全文</el-button>
+                            </div>
+                        </div>
                     </li>
                 </ul>
 
@@ -84,6 +94,7 @@
         <el-aside width="500px"></el-aside>
     </el-container>
 </div>
+<script id="ribbon" src="js/ribbon.min.js" zIndex="100"></script>
 </body>
 <script>
     const clickoutside = {
@@ -227,6 +238,9 @@
                     }})
                     .then((response) => {
                         this.items = response.data
+                        for(var i=0;i<this.items.length;i++){
+                            this.items[i].publishTime=new Date(this.items[i].publishTime)
+                        }
                         console.log(response)
                     })
             },
