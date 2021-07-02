@@ -30,8 +30,11 @@
                 <el-main>
                     <div class="block">
                         <el-carousel trigger="click" height="400px">
-                            <el-carousel-item v-for="key in item" >
-                                <h3 class="small"><img :src="key.img" height="400px"/></h3>
+                            <el-carousel-item style="background-color: #EFEFEF" v-for="key in item" >
+                                <h3 class="small" style="text-align: center"><img :src="key.picturePath" height="400px"/></h3>
+                                <h3 style="height: 60px;line-height: 60px;overflow: hidden;margin: -60px 0 0 0;padding: 0 10px 0 12px;position: relative;font-size: 20px;z-index: 3;text-align: center;color: white">
+                                    {{key.title}}
+                                </h3>
                             </el-carousel-item>
                         </el-carousel>
                     </div>
@@ -45,16 +48,30 @@
         var app = new Vue({
             el: '#app',
             data: {
-                item : [{id:1,img:'img/NASA将128只小鱿鱼送往国际空间站.jpg'},
-                        {id:2,img:'img/山西铁矿透水事故救援现场.jpg'},
-                        {id:3,img:'img/核污染废弃物管理不善 东电将加紧展开检查.jpg'},
-                        {id:4,img:'img/水下摄影师拍三亚：海底世界惊艳曝光.jpg'}],
+                item : [],
+                tableData : [],
                 activeIndex: '1'
+            },
+            mounted: function () {
+                this.getNews();
             },
             methods:{
                 handleSelect(key, keyPath) {
                     console.log(key, keyPath);
-                }
+                },
+                getNews() {
+                    axios.get('/news')
+                        .then((response) => {
+                            this.tableData = response.data
+                            for(var i=0;i<this.tableData.length;i++){
+                                if(this.tableData[i].isTopLine == 1){
+                                    this.item.push(this.tableData[i])
+                                }
+                            }
+                            console.log(response)
+                        })
+                },
+
             }
         })
     </script>
